@@ -1,9 +1,8 @@
-import uuid
-
 from kombu import Connection
 from kombu.log import get_logger
 from kombu.utils.debug import setup_logging
 
+from action import HostAction
 from config import KombuConfig
 from consumer import WorkerEventConsumer
 from service import WorkerService
@@ -16,7 +15,7 @@ def run():
     setup_logging(loglevel='INFO', loggers=[''])
 
     service = WorkerService()
-    service.producer.send(KombuConfig.routing, KombuConfig.queue, 'register', KombuConfig.id)
+    service.producer.send(KombuConfig.routing, KombuConfig.queue, HostAction.REGISTER, KombuConfig.id)
 
     # Connect to AMQ and start the consumer
     with Connection(KombuConfig.host) as connection:
