@@ -1,3 +1,5 @@
+import uuid
+
 from kombu import Connection
 from kombu.log import get_logger
 from kombu.utils.debug import setup_logging
@@ -14,14 +16,15 @@ def run():
     setup_logging(loglevel='INFO', loggers=[''])
 
     service = WorkerService()
+    service.producer.send(KombuConfig.routing, KombuConfig.queue, 'register', KombuConfig.id)
 
     # Connect to AMQ and start the consumer
     with Connection(KombuConfig.host) as connection:
         try:
-            consumer = WorkerEventConsumer(connection, service, 'pdk-worker-routing')
+            consumer = WorkerEventConsumer(connection, service, KombuConfig.id, KombuConfig.id)
             consumer.run()
         except KeyboardInterrupt:
-            print('Worker Stopped')
+            LOGGER.info('Worker Stopped')
 
 
 if __name__ == '__main__':

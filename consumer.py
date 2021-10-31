@@ -9,7 +9,7 @@ LOGGER = get_logger(__name__)
 
 class BaseEventConsumer(ConsumerMixin):
 
-    def __init__(self, connection, service, queue, routing):
+    def __init__(self, connection, service, routing, queue):
         self.connection = connection
         self.service = service
 
@@ -43,10 +43,10 @@ class BaseEventConsumer(ConsumerMixin):
 class HostEventConsumer(BaseEventConsumer):
 
     def __init__(self, connection, service):
-        super().__init__(connection, service, KombuConfig.hqueue, KombuConfig.hrouting)
+        super().__init__(connection, service, KombuConfig.routing, KombuConfig.queue)
 
 
 class WorkerEventConsumer(BaseEventConsumer):
 
-    def __init__(self, connection, service, wrouting):
-        super().__init__(connection, service, KombuConfig.wqueue, wrouting)
+    def __init__(self, connection, service, routing, queue):
+        super().__init__(connection, service, routing, queue)

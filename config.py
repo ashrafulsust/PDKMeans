@@ -1,4 +1,6 @@
 import os
+import uuid
+
 from kombu.log import get_logger
 
 from utils import Singleton
@@ -17,6 +19,10 @@ class Config(metaclass=Singleton):
 class KombuConfig(Config):
 
     @property
+    def id(self):
+        return self.get_property("HOSTNAME", str(uuid.uuid1()))
+
+    @property
     def host(self):
         return self.get_property("KOMBU_HOST")
 
@@ -25,16 +31,12 @@ class KombuConfig(Config):
         return self.get_property("KOMBU_EXCHANGE")
 
     @property
-    def hqueue(self):
-        return self.get_property("KOMBU_HQUEUE")
+    def queue(self):
+        return self.get_property("KOMBU_QUEUE")
 
     @property
-    def wqueue(self):
-        return self.get_property("KOMBU_WQUEUE")
-
-    @property
-    def hrouting(self):
-        return self.get_property("KOMBU_HROUTING")
+    def routing(self):
+        return self.get_property("KOMBU_ROUTING")
 
 
 KombuConfig = KombuConfig()
