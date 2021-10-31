@@ -1,26 +1,28 @@
 from sys import argv
 
+from kombu import Exchange
 from kombu.connection import Connection
 from config import KombuConfig
-from queues import event_exchange, event_queues
 
 
-def send_event(action, data, routing=KombuConfig.exchange):
+def send_event(routing, action, data):
     payload = {'action': action, 'data': data}
+
+    exchange = Exchange(KombuConfig.exchange, type='direct')
 
     with Connection(KombuConfig.host) as connection:
         producer = connection.Producer()
         producer.publish(
             payload,
             serializer='pickle',
-            exchange=event_exchange,
-            routing_key=routing,
-            declare=event_queues
+            exchange=exchange,
+            routing_key=routing
         )
 
 
 if __name__ == '__main__':
-    action = argv[1]
-    data = argv[2]
+    routing = argv[1]
+    action = argv[2]
+    data = argv[3]
 
-    send_event(action, data)
+    send_event(routing, action, data)

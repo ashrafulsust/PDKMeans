@@ -25,8 +25,16 @@ class KombuConfig(Config):
         return self.get_property("KOMBU_EXCHANGE")
 
     @property
-    def queue(self):
-        return self.get_property("KOMBU_QUEUE")
+    def hqueue(self):
+        return self.get_property("KOMBU_HQUEUE")
+
+    @property
+    def wqueue(self):
+        return self.get_property("KOMBU_WQUEUE")
+
+    @property
+    def hrouting(self):
+        return self.get_property("KOMBU_HROUTING")
 
 
 KombuConfig = KombuConfig()

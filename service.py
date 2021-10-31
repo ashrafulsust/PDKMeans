@@ -21,7 +21,7 @@ class HostService:
         return self.actions[action](data)
 
     def process_test(self, data):
-        print('Host : ', data)
+        LOGGER.info(f'Host : {data}')
 
 
 class WorkerService:
@@ -40,4 +40,4 @@ class WorkerService:
         return self.actions[action](data)
 
     def process_test(self, data):
-        print('Worker : ', data)
+        LOGGER.info(f'Worker : {data}')
