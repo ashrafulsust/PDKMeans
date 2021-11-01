@@ -15,8 +15,11 @@ class HostService:
 
         self.actions = {
             HostAction.PING: self.process_ping,
-            HostAction.REGISTER: self.process_register
+            HostAction.REGISTER: self.process_register,
+            HostAction.SUBMIT: self.process_submit
         }
+
+        self.workers = []
 
     def process_action(self, action, data):
         if action not in self.actions:
@@ -27,8 +30,12 @@ class HostService:
     def process_ping(self, data):
         LOGGER.info(f'ping {data}')
 
-    def process_register(self, data):
-        LOGGER.info(f'registered worker id {data}')
+    def process_register(self, worker_id):
+        self.workers.append(worker_id)
+        LOGGER.info(f'registered worker id {worker_id}')
+
+    def process_submit(self, path):
+        pass
 
 
 class WorkerService:

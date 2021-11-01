@@ -1,2 +1,4 @@
 kombu==4.5.0
 redis==3.3.11
+numpy==1.19.5
+matplotlib==3.4.3
