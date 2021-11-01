@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 from kombu.log import get_logger
 
@@ -50,3 +51,9 @@ def to_format_json(data):
 
 def to_format_file(data, file):
     return json.dump(data, file, indent=2, ensure_ascii=False, default=str)
+
+
+def load_bmi_data(path):
+    data = np.loadtxt(path, delimiter=",", dtype=object, skiprows=1)
+    data = data[:, 1:3].astype(float)
+    return data
