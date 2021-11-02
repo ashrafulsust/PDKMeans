@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from kombu.log import get_logger
 
@@ -64,10 +65,8 @@ class HostService:
         self.GCard = np.zeros(self.k)
         self.centroids = self.data[np.random.randint(self.n, size=self.k), :]
 
-        LOGGER.info(self.GRC.shape)
-
         w = len(self.workers)
-        m = self.n // w
+        m = math.ceil(self.n / w)
 
         self.remaining = w
 
@@ -144,8 +143,6 @@ class WorkerService:
         RD = 0
         RC = np.zeros((k, d))
         Card = np.zeros(k)
-
-        LOGGER.info(RC.shape)
 
         for row in self.data:
             min_distance = float("inf")
