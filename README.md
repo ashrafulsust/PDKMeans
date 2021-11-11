@@ -6,7 +6,7 @@ docker-compose build --force-rm
 
 *Note: You might need to add sudo before docker*
 
-# Start Host and Worker (3) docker
+# Start Host and Worker (# of worker 3) docker
 
 ```shell
 docker-compose up --scale worker=3
