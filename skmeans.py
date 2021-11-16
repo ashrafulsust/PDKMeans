@@ -82,7 +82,6 @@ for row in data:
             min_distance = distance
             min_centroid = i
 
-    print(min_centroid)
     plt.scatter(row[0], row[1], c=color[min_centroid])
 
 # plot centroids
