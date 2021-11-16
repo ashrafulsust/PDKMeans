@@ -64,7 +64,7 @@ for t in range(10000):
     J1 = J2
 
 # setting color values for our
-color = ["brown", "blue", "green", "cyan"]
+color = np.random.rand(k + 1, 3)
 
 for row in data:
     min_distance = float("inf")
@@ -82,11 +82,11 @@ for row in data:
             min_distance = distance
             min_centroid = i
 
-    plt.scatter(row[0], row[1], c=color[min_centroid])
+    plt.scatter(row[0], row[1], c=[color[min_centroid]])
 
 # plot centroids
 for centroid in centroids:
-    plt.scatter(centroid[0], centroid[1], c="red")
+    plt.scatter(centroid[0], centroid[1], c=[color[k]])
 
 plt.xlabel("Height/ cm")
 plt.ylabel("Weight/ kg")
