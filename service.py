@@ -1,4 +1,6 @@
 import math
+import time
+import statistics
 import numpy as np
 from kombu.log import get_logger
 
@@ -36,6 +38,8 @@ class HostService:
         self.data = None
         self.centroids = None
         self.remaining = 0
+        self.start_time = 0
+        self.execution_times = []
 
     def process_action(self, action, data):
         if action not in self.actions:
@@ -65,6 +69,8 @@ class HostService:
         self.GCard = np.zeros(self.k)
         self.centroids = self.data[np.random.randint(self.n, size=self.k), :]
 
+        self.start_time = time.time()
+
         w = len(self.workers)
         m = math.ceil(self.n / w)
 
@@ -92,7 +98,13 @@ class HostService:
             LOGGER.info(f"centroid = {self.centroids}")
 
             if abs(self.GRD - self.J) <= self.e:
-                LOGGER.info("finished")
+                execution_time = (time.time() - self.start_time)
+                LOGGER.info(f"finished time takes {execution_time}s")
+
+                self.execution_times.append(execution_time)
+
+                LOGGER.info(f"Avg execution time : {statistics.mean(self.execution_times)}s")
+
                 plot(self.data, self.centroids, self.k, self.d, True)
             else:
                 self.t += 1

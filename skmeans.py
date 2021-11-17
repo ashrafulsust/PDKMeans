@@ -1,3 +1,6 @@
+import math
+import statistics
+import time
 import numpy as np
 
 from utils import plot
@@ -19,7 +22,7 @@ def skmeans(data, k, d, e):
 
         for row in data:
             min_distance = float("inf")
-            min_centroid = -1
+            min_centroid = None
 
             for i, centroid in enumerate(centroids):
                 distance = 0
@@ -54,6 +57,9 @@ def skmeans(data, k, d, e):
 
         print(f"J = {J2}")
 
+        if math.isnan(J2):
+            raise Exception(f"J is nan")
+
         if abs(J1 - J2) <= e:
             break
 
@@ -75,5 +81,24 @@ def test_bmi_index():
     plot(data, centroids, k, d)
 
 
+def benchmark_bmi_index():
+    k = 4
+    d = 2
+    e = 0
+
+    data = np.loadtxt("data/500_Person_Gender_Height_Weight_Index.csv", delimiter=",", dtype=object, skiprows=1)
+    data = data[:, 1:3].astype(float)
+
+    execution_times = []
+
+    for t in range(100):
+        start_time = time.time()
+        centroids = skmeans(data, k, d, e)
+        execution_times.append((time.time() - start_time))
+
+    print(f"Avg execution time : {statistics.mean(execution_times)}s")
+
+
 if __name__ == '__main__':
     test_bmi_index()
+    benchmark_bmi_index()
