@@ -5,7 +5,7 @@ from kombu.log import get_logger
 from action import *
 from config import Config, KombuConfig
 from producer import EventProducer
-from utils import load_bmi_data
+from utils import load_bmi_data, plot
 
 LOGGER = get_logger(__name__)
 
@@ -93,6 +93,7 @@ class HostService:
 
             if abs(self.GRD - self.J) <= self.e:
                 LOGGER.info("finished")
+                plot(self.data, self.centroids, self.k, self.d, True)
             else:
                 self.t += 1
 
