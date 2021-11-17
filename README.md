@@ -23,3 +23,9 @@ docker exec -it pdkmeans_host_1 bash
 ```shell
 python3 submit.py 3 0 data/500_Person_Gender_Height_Weight_Index.csv
 ```
+
+# Copy output plot to local
+
+```shell
+docker cp pdkmeans_host_1:/opt/app/output.png .
+```
