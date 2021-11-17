@@ -1,68 +1,79 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 from utils import plot
 
-k = 4
-d = 2
-e = 0
 
-data = np.loadtxt("data/500_Person_Gender_Height_Weight_Index.csv", delimiter=",", dtype=object, skiprows=1)
-data = data[:, 1:3].astype(float)
+def skmeans(data, k, d, e):
+    centroids = data[np.random.randint(data.shape[0], size=k), :]
 
-centroids = data[np.random.randint(data.shape[0], size=k), :]
+    print(f"centroids = {centroids}")
 
-print(f"centroids = {centroids}")
+    J1 = 0
 
-J1 = 0
+    for t in range(10000):
+        print(f"iteration#{t}")
 
-for t in range(10000):
-    print(f"iteration#{t}")
+        RD = 0
+        RC = np.zeros((k, d))
+        Card = np.zeros(k)
 
-    RD = 0
-    RC = np.zeros((k, d))
-    Card = np.zeros(k)
+        for row in data:
+            min_distance = float("inf")
+            min_centroid = -1
 
-    for row in data:
-        min_distance = float("inf")
-        min_centroid = -1
+            for i, centroid in enumerate(centroids):
+                distance = 0
 
-        for i, centroid in enumerate(centroids):
-            distance = 0
+                for j in range(d):
+                    distance += (centroid[j] - row[j]) ** 2
+
+                distance = np.sqrt(distance)
+
+                if distance < min_distance:
+                    min_distance = distance
+                    min_centroid = i
+
+                RD += distance
 
             for j in range(d):
-                distance += (centroid[j] - row[j]) ** 2
+                RC[min_centroid][j] += row[j]
 
-            distance = np.sqrt(distance)
+            Card[min_centroid] += 1
 
-            if distance < min_distance:
-                min_distance = distance
-                min_centroid = i
+        print(f"RD = {RD}")
+        print(f"RC = {RC}")
+        print(f"Card = {Card}")
 
-            RD += distance
+        for i in range(k):
+            for j in range(d):
+                centroids[i, j] = RC[i][j] / Card[i]
 
-        for j in range(d):
-            RC[min_centroid][j] += row[j]
+        print(f"centroid = {centroids}")
 
-        Card[min_centroid] += 1
+        J2 = RD
 
-    print(f"RD = {RD}")
-    print(f"RC = {RC}")
-    print(f"Card = {Card}")
+        print(f"J = {J2}")
 
-    for i in range(k):
-        for j in range(d):
-            centroids[i, j] = RC[i][j] / Card[i]
+        if abs(J1 - J2) <= e:
+            break
 
-    print(f"centroid = {centroids}")
+        J1 = J2
 
-    J2 = RD
+    return centroids
 
-    print(f"J = {J2}")
 
-    if abs(J1 - J2) <= e:
-        break
+def test_bmi_index():
+    k = 4
+    d = 2
+    e = 0
 
-    J1 = J2
+    data = np.loadtxt("data/500_Person_Gender_Height_Weight_Index.csv", delimiter=",", dtype=object, skiprows=1)
+    data = data[:, 1:3].astype(float)
 
-plot(data, centroids, k, d)
+    centroids = skmeans(data, k, d, e)
+
+    plot(data, centroids, k, d)
+
+
+if __name__ == '__main__':
+    test_bmi_index()
