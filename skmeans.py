@@ -1,9 +1,9 @@
 import math
-import statistics
 import time
+
 import numpy as np
 
-from utils import plot
+from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image
 
 
 def skmeans(data, k, d, e):
@@ -69,36 +69,29 @@ def skmeans(data, k, d, e):
 
 
 def test_bmi_index():
-    k = 4
+    k = 3
     d = 2
     e = 0
 
-    data = np.loadtxt("data/500_Person_Gender_Height_Weight_Index.csv", delimiter=",", dtype=object, skiprows=1)
-    data = data[:, 1:3].astype(float)
-
+    data = load_bmi_data("data/500_Person_Gender_Height_Weight_Index.csv")
+    start_time = time.time()
     centroids = skmeans(data, k, d, e)
+    print(f"Execution time : {time.time() - start_time}s")
+    plot_bmi_data(data, centroids)
 
-    plot(data, centroids, k, d)
 
-
-def benchmark_bmi_index():
-    k = 4
+def test_mri_image():
+    k = 3
     d = 2
     e = 0
 
-    data = np.loadtxt("data/500_Person_Gender_Height_Weight_Index.csv", delimiter=",", dtype=object, skiprows=1)
-    data = data[:, 1:3].astype(float)
-
-    execution_times = []
-
-    for t in range(100):
-        start_time = time.time()
-        centroids = skmeans(data, k, d, e)
-        execution_times.append((time.time() - start_time))
-
-    print(f"Avg execution time : {statistics.mean(execution_times)}s")
+    original, data = load_mri_image("data/mri-2.jpg")
+    start_time = time.time()
+    centroids = skmeans(data, k, d, e)
+    print(f"Execution time : {time.time() - start_time}s")
+    plot_mri_image(original, data, centroids)
 
 
 if __name__ == '__main__':
     test_bmi_index()
-    benchmark_bmi_index()
+    test_mri_image()

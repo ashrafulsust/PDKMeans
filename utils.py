@@ -1,6 +1,8 @@
 import json
-import numpy as np
+
+import cv2
 import matplotlib.pyplot as plt
+import numpy as np
 from kombu.log import get_logger
 
 LOGGER = get_logger(__name__)
@@ -59,27 +61,34 @@ def load_bmi_data(path):
     return data
 
 
-def plot(data, centroids, k, d, save=False):
+def get_closest_centroid(row, centroids):
+    min_distance = float("inf")
+    min_centroid = -1
+
+    for i, centroid in enumerate(centroids):
+        distance = 0
+
+        for j in range(len(centroid)):
+            distance += (centroid[j] - row[j]) ** 2
+
+        distance = np.sqrt(distance)
+
+        if distance < min_distance:
+            min_distance = distance
+            min_centroid = i
+
+    return min_centroid
+
+
+def plot_bmi_data(data, centroids, save=False):
+    k = len(centroids)
+
     # setting color values for our
     color = np.random.rand(k + 1, 3)
 
     for row in data:
-        min_distance = float("inf")
-        min_centroid = -1
-
-        for i, centroid in enumerate(centroids):
-            distance = 0
-
-            for j in range(d):
-                distance += (centroid[j] - row[j]) ** 2
-
-            distance = np.sqrt(distance)
-
-            if distance < min_distance:
-                min_distance = distance
-                min_centroid = i
-
-        plt.scatter(row[0], row[1], c=[color[min_centroid]])
+        centroid = get_closest_centroid(row, centroids)
+        plt.scatter(row[0], row[1], c=[color[centroid]])
 
     # plot centroids
     for centroid in centroids:
@@ -87,6 +96,37 @@ def plot(data, centroids, k, d, save=False):
 
     plt.xlabel("Height/ cm")
     plt.ylabel("Weight/ kg")
+
+    if save:
+        plt.savefig("output.png")
+    else:
+        plt.show()
+
+
+def load_mri_image(path):
+    original = cv2.imread(path)
+    original = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    vectorized = np.float32(original.reshape((-1, 3)))
+    return original, vectorized
+
+
+def plot_mri_image(original, data, centroids, save=False):
+    k = len(centroids)
+    images = np.zeros((k, *data.shape))
+
+    for index, row in enumerate(data):
+        centroid = get_closest_centroid(row, centroids)
+        images[centroid][index] = row
+
+    plt.subplot((k + 1) // 2, 2, 1), plt.imshow(original)
+    plt.title("Original")
+    plt.axis("off")
+
+    for i in range(k):
+        image = images[i].reshape(original.shape)
+        plt.subplot((k + 1) // 2, 2, i + 2), plt.imshow(image)
+        plt.title(f"Cluster#{i}")
+        plt.axis("off")
 
     if save:
         plt.savefig("output.png")

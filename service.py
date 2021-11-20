@@ -1,13 +1,12 @@
 import math
 import time
-import statistics
 import numpy as np
 from kombu.log import get_logger
 
 from action import *
 from config import Config, KombuConfig
 from producer import EventProducer
-from utils import load_bmi_data, plot
+from utils import load_bmi_data, plot_bmi_data, load_mri_image, plot_mri_image
 
 LOGGER = get_logger(__name__)
 
@@ -36,10 +35,10 @@ class HostService:
         self.GRC = None
         self.GCard = None
         self.data = None
+        self.original = None
         self.centroids = None
         self.remaining = 0
         self.start_time = 0
-        self.execution_times = []
 
     def process_action(self, action, data):
         if action not in self.actions:
@@ -61,7 +60,12 @@ class HostService:
         self.e = request['e']
         self.t = 0
         self.J = 0
-        self.data = load_bmi_data(request['path'])
+
+        if request['path'].endswith('csv'):
+            self.original, self.data = None, load_bmi_data(request['path'])
+        else:
+            self.original, self.data = load_mri_image(request['path'])
+
         self.n = self.data.shape[0]
         self.d = self.data.shape[1]
         self.GRD = 0
@@ -99,13 +103,12 @@ class HostService:
 
             if abs(self.GRD - self.J) <= self.e:
                 execution_time = (time.time() - self.start_time)
-                LOGGER.info(f"finished time takes {execution_time}s")
+                LOGGER.info(f"finished, execution time {execution_time}s")
 
-                self.execution_times.append(execution_time)
-
-                LOGGER.info(f"Avg execution time : {statistics.mean(self.execution_times)}s")
-
-                plot(self.data, self.centroids, self.k, self.d, True)
+                if self.original is None:
+                    plot_bmi_data(self.data, self.centroids, True)
+                else:
+                    plot_mri_image(self.original, self.data, self.centroids, True)
             else:
                 self.t += 1
 
