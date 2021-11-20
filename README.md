@@ -31,5 +31,5 @@ python3 submit.py 3 0 data/mri-2.jpg
 # Copy output plot to local
 
 ```shell
-docker cp pdkmeans_host_1:/opt/app/output.png .
+docker cp pdkmeans-host-1:/opt/app/output.png .
 ```
