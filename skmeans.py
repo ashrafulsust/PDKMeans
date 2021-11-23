@@ -6,8 +6,11 @@ import numpy as np
 from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image
 
 
-def skmeans(data, k, d, e):
-    centroids = data[np.random.randint(data.shape[0], size=k), :]
+def skmeans(data, k, e):
+    n = data.shape[0]
+    d = data.shape[1]
+
+    centroids = data[np.random.randint(n, size=k), :]
 
     print(f"centroids = {centroids}")
 
@@ -70,24 +73,22 @@ def skmeans(data, k, d, e):
 
 def test_bmi_index():
     k = 3
-    d = 2
     e = 0
 
     data = load_bmi_data("data/500_Person_Gender_Height_Weight_Index.csv")
     start_time = time.time()
-    centroids = skmeans(data, k, d, e)
+    centroids = skmeans(data, k, e)
     print(f"Execution time : {time.time() - start_time}s")
     plot_bmi_data(data, centroids)
 
 
 def test_mri_image():
-    k = 3
-    d = 2
+    k = 2
     e = 0
 
     original, data = load_mri_image("data/mri-2.jpg")
     start_time = time.time()
-    centroids = skmeans(data, k, d, e)
+    centroids = skmeans(data, k, e)
     print(f"Execution time : {time.time() - start_time}s")
     plot_mri_image(original, data, centroids)
 
