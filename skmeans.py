@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 
-from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image
+from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image, plot_bmi_index
 
 
 def skmeans(data, k, e):
@@ -86,7 +86,7 @@ def test_mri_image():
     k = 3
     e = 0
 
-    original, data = load_mri_image("data/mri-2.jpg")
+    original, data = load_mri_image("data/mri-3.jpg")
     start_time = time.time()
     centroids = skmeans(data, k, e)
     print(f"Execution time : {time.time() - start_time}s")

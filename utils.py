@@ -135,3 +135,24 @@ def plot_mri_image(original, data, centroids, save=False):
         plt.savefig("mri-output.png")
     else:
         plt.show()
+
+
+def plot_bmi_index(path, save=False):
+    data = np.loadtxt(path, delimiter=",", dtype=object, skiprows=1)
+
+    # data[data == "Male"] = 1
+    # data[data == "Female"] = 0
+
+    # setting color values for our
+    color = np.random.rand(6, 3)
+
+    for row in data:
+        plt.scatter(float(row[1]), float(row[2]), c=[color[int(row[3])]])
+
+    plt.xlabel("Height/ cm")
+    plt.ylabel("Weight/ kg")
+
+    if save:
+        plt.savefig("index-output.png")
+    else:
+        plt.show()
