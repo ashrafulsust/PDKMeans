@@ -1,4 +1,5 @@
 import json
+import math
 
 import cv2
 import matplotlib.pyplot as plt
@@ -118,13 +119,15 @@ def plot_mri_image(original, data, centroids, save=False):
         centroid = get_closest_centroid(row, centroids)
         images[centroid][index] = row
 
-    plt.subplot((k + 1) // 2, 2, 1), plt.imshow(original)
+    n = math.ceil((k + 1) / 2)
+
+    plt.subplot(n, 2, 1), plt.imshow(original)
     plt.title("Original")
     plt.axis("off")
 
     for i in range(k):
         image = images[i].reshape(original.shape)
-        plt.subplot((k + 1) // 2, 2, i + 2), plt.imshow(image)
+        plt.subplot(n, 2, i + 2), plt.imshow(image)
         plt.title(f"Cluster#{i}")
         plt.axis("off")
 

@@ -72,7 +72,7 @@ def skmeans(data, k, e):
 
 
 def test_bmi_index():
-    k = 3
+    k = 6
     e = 0
 
     data = load_bmi_data("data/500_Person_Gender_Height_Weight_Index.csv")
@@ -83,7 +83,7 @@ def test_bmi_index():
 
 
 def test_mri_image():
-    k = 2
+    k = 3
     e = 0
 
     original, data = load_mri_image("data/mri-2.jpg")
