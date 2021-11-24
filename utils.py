@@ -99,7 +99,7 @@ def plot_bmi_data(data, centroids, save=False):
     plt.ylabel("Weight/ kg")
 
     if save:
-        plt.savefig("output.png")
+        plt.savefig("bmi-output.png")
     else:
         plt.show()
 
@@ -132,6 +132,6 @@ def plot_mri_image(original, data, centroids, save=False):
         plt.axis("off")
 
     if save:
-        plt.savefig("output.png")
+        plt.savefig("mri-output.png")
     else:
         plt.show()
