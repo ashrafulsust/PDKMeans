@@ -156,3 +156,30 @@ def plot_bmi_index(path, save=False):
         plt.savefig("index-output.png")
     else:
         plt.show()
+
+
+def load_synthetic_data(path):
+    return np.loadtxt(path, dtype=float)
+
+
+def plot_synthetic_data(data, centroids, save=False):
+    k = len(centroids)
+
+    # setting color values for our
+    color = np.random.rand(k + 1, 3)
+
+    for row in data:
+        centroid = get_closest_centroid(row, centroids)
+        plt.scatter(row[0], row[1], c=[color[centroid]])
+
+    # plot centroids
+    for centroid in centroids:
+        plt.scatter(centroid[0], centroid[1], c=[color[k]])
+
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+    if save:
+        plt.savefig("synthetic-output.png")
+    else:
+        plt.show()

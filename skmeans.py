@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 
-from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image, plot_bmi_index
+from utils import plot_bmi_data, load_bmi_data, load_mri_image, plot_mri_image, load_synthetic_data, plot_synthetic_data
 
 
 def skmeans(data, k, e):
@@ -93,6 +93,18 @@ def test_mri_image():
     plot_mri_image(original, data, centroids)
 
 
+def test_s1_data():
+    k = 14
+    e = 0
+
+    data = load_synthetic_data("data/s2.txt")
+    start_time = time.time()
+    centroids = skmeans(data, k, e)
+    print(f"Execution time : {time.time() - start_time}s")
+    plot_synthetic_data(data, centroids)
+
+
 if __name__ == '__main__':
+    test_s1_data()
     test_bmi_index()
     test_mri_image()
